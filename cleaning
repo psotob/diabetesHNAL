@@ -1,0 +1,807 @@
+######### Limpieza de base de datos descargadas> data13, data14 y data15
+##  Importar datos a R
+data13.inicial <- read.csv("2013_rawdata_casos_29Jan16.csv")
+data14.inicial <- read.csv("2014_rawdata_casos_29Jan16.csv")
+data15.inicial <- read.csv("2015_rawdata_casos_29Jan16.csv")
+
+data13 <- read.csv("2013_rawdata_casos_29Jan16.csv")
+data14 <- read.csv("2014_rawdata_casos_29Jan16.csv")
+data15 <- read.csv("2015_rawdata_casos_29Jan16.csv")
+
+data13.inicial$nombrecomp <- paste(data13.inicial$apepat, data13.inicial$apemat, data13.inicial$nombres)
+data14.inicial$nombrecomp <- paste(data14.inicial$apepat, data14.inicial$apemat, data14.inicial$nombres)
+data15.inicial$nombrecomp <- paste(data15.inicial$apepat, data15.inicial$apemat, data15.inicial$nombres)
+
+data13$nombrecomp <- paste(data13$apepat, data13$apemat, data13$nombres)
+data14$nombrecomp <- paste(data14$apepat, data14$apemat, data14$nombres)
+data15$nombrecomp <- paste(data15$apepat, data15$apemat, data15$nombres)
+
+## Lista de variables para evaluar duplicados
+identity <- c("registroId", "dni", "histcli", "apepat", "apemat", "nombres", "ubigeo_nac", 
+              "direccion", "fecha_reg", "fecha_cap")
+
+## Total de datos al inicio
+length(data13$registroId)
+length(data14$registroId)
+
+length(data15$registroId)
+
+## Limpieza duplicados 2013
+dups13.hc <- data13[duplicated(data13$histcli)|duplicated(data13$histcli, fromLast = TRUE),]
+ord.hc13 <- order(dups13.hc$histcli)
+
+dups13.dni <- data13[duplicated(data13$dni)|duplicated(data13$dni, fromLast = TRUE),]
+ord.dni13 <- order(dups13.dni$dni)
+
+dups13.nomb <- data13[(duplicated(data13$apepat)&duplicated(data13$apemat)&duplicated(data13$nombres))|
+                        (duplicated(data13$apepat, fromLast = TRUE)&duplicated(data13$apemat, fromLast = TRUE)&
+                           duplicated(data13$nombres, fromLast = TRUE)),]
+ord.nomb13 <- order(dups13.nomb$apepat, dups13.nomb$apemat)
+
+dups13.nombcomp <- data13[duplicated(data13$nombrecomp)|duplicated(data13$nombrecomp, fromLast = TRUE),]
+ord.nombcom13 <- order(dups13.nombcomp$nombrecomp)
+
+dups13.hc[ord.hc13,idname] # Idenfificando duplicados segun HC
+View(data13[c(76,102),])
+data13 <- data13[c(-76,-102),]
+
+dups13.dni[ord.dni13,idname] # Identificando duplicados segun DNI
+data13 <- data13[c(-249,-107),]
+
+dups13.nomb[ord.nomb13,idname] # Identificando duplicados segun Nombres (dividido)
+data13 <- data13[c(-71, -102),]
+
+dups13.nombcomp[ord.nombcom13, idname] # Idenfificando duplicados segun Nombres completos
+data13 ## No hubo necesidad de extraer nada mas
+
+## Limpieza duplicados 2014
+idname <- names(data14) %in% identity
+dups14.hc <- data14[duplicated(data14$histcli)|duplicated(data14$histcli, fromLast = TRUE),]
+ord.hc14 <- order(dups14.hc$histcli)
+
+dups14.dni <- data14[duplicated(data14$dni)|duplicated(data14$dni, fromLast = TRUE),]
+ord.dni14 <- order(dups14.dni$dni)
+
+dups14.nomb <- data14[(duplicated(data14$apepat)&duplicated(data14$apemat)&duplicated(data14$nombres))|
+                        (duplicated(data14$apepat, fromLast = TRUE)&duplicated(data14$apemat, fromLast = TRUE)&
+                           duplicated(data14$nombres, fromLast = TRUE)),]
+ord.nomb14 <- order(dups14.nomb$apepat, dups14.nomb$apemat)
+
+dups14.nombcomp <- data14[duplicated(data14$nombrecomp)|duplicated(data14$nombrecomp, fromLast = TRUE),]
+ord.nombcom14 <- order(dups14.nombcomp$nombrecomp)
+
+dups14.hc[ord.hc14,idname] # Idenfificando duplicados segun HC
+data14 <- data14[c(-419, -935, -702, -332, -976, -1024, -1043, -444, -1108, -37, 
+                   -68, -1037, -414, -1018, -922, -793, -1093),]
+
+dups14.dni[ord.dni14,idname] # Idenfificando duplicados segun DNI
+## data14 <- data14[c(-68, -974, -793, -414),]
+## data14 <- data14[c(-793),]
+
+dups14.nomb[ord.nomb14,idname] # Idenfificando duplicados segun Nombres (Dividido)
+
+dups14.nombcomp[ord.nombcom14, idname] # Idenfificando duplicados Nombres completo
+
+## Limpieza duplicados 2015
+idname <- names(data15) %in% identity
+
+dups15.hc <- data15[duplicated(data15$histcli)|duplicated(data15$histcli, fromLast = TRUE),]
+ord.hc15 <- order(dups15.hc$histcli)
+
+dups15.dni <- data15[duplicated(data15$dni)|duplicated(data15$dni, fromLast = TRUE),]
+ord.dni15 <- order(dups15.dni$dni)
+
+dups15.nomb <- data15[(duplicated(data15$apepat)&duplicated(data15$apemat)&duplicated(data15$nombres))|
+                        (duplicated(data15$apepat, fromLast = TRUE)&duplicated(data15$apemat, fromLast = TRUE)&
+                           duplicated(data15$nombres, fromLast = TRUE)),]
+ord.nomb15 <- order(dups15.nomb$apepat, dups15.nomb$apemat)
+
+dups15.nombcomp <- data15[duplicated(data15$nombrecomp)|duplicated(data15$nombrecomp, fromLast = TRUE),]
+ord.nombcom15 <- order(dups15.nombcomp$nombrecomp)
+
+dups15.hc[ord.hc15,idname] # Idenfificando duplicados segun HC
+data15 <- data15[c(-1747, -137, -1116, -1721, -906, -1260, -1848, -1016, -6, -1478, -1453, -1655, -1066, -1670, 
+                   -831, -1186, -951, -227, -301, -315, -1114, -1131, -879, -1146, -1126, -1897, -1882, -1785, 
+                   -90, -1911, -259, -991, -1230, -1682, -1206 ),]
+
+dups15.dni[ord.dni15,idname] # Idenfificando duplicados segun DNI
+
+dups15.nomb[ord.nomb15,idname] # Idenfificando duplicados segun Nombre (separado)
+
+dups15.nombcomp[ord.nombcom15, idname] # Idenfificando duplicados segun Nombre completo
+
+## Eliminar variables no útiles
+remove <- c("diresas", "red", "microredes", "establecimiento", "diresa", "redes", "microred", 
+            "eess", "histcli", "apepat", "apemat", "nombres", "dni", "ubigeo_nac", "direccion", 
+            "telefono", "celular", "medico", "cmp", "usuario", "marca", "nombrecomp")
+dropvars <- names(data13) %in% remove
+data13 <- data13[!dropvars]
+data14 <- data14[!dropvars]
+data15 <- data15[!dropvars]
+
+## Exportando a csv
+write.table(data13, "13_rawdata_casos.csv", sep = ",")
+write.table(data14, "14_rawdata_casos.csv", sep = ",")
+write.table(data15, "15_rawdata_casos.csv", sep = ",")
+
+## Removiendo objetos innecesarios
+rm(dups13, dups13.apepat, dups13.dni, dups13.hc, dups13.nomb, dups13.nombcomp,
+   dups14.dni, dups14.hc, dups14.nomb, dups14.nombcomp, dups15.dni, dups15.dni2, 
+   dups15.hc, dups15.nomb, dups15.nombcomp, drops, dropvars, identity, ord.dni13,
+   ord.dni14, ord.dni15, ord.hc13, ord.hc14, ord.hc15, ord.nomb13, ord.nomb14, 
+   ord.nomb15, ord.nombcom13, ord.nombcom14, ord.nombcom15, prop.hba1c13, remove)
+
+##Limpieza de variables, var por var de las 3 bases de datos por años (2013-2015)
+## Hb glicosilada
+boxplot(data15$hemoglic)
+hist(data15$hemoglic)
+
+boxplot(data14$hemoglic)
+hist(data14$hemoglic)
+
+boxplot(data13$hemoglic)
+hist(data13$hemoglic)
+
+table(data15$hemoglic, exclude = NULL)
+table(data14$hemoglic, exclude = NULL)
+table(data13$hemoglic, exclude = NULL)
+
+## Se excluyó a todas las a1c mayores de 22 o menores de 4
+data13$hemoglic[data13$hemoglic == 0] <- NA # Limpiando data13
+data14$hemoglic[data14$hemoglic <= 1 | data14$hemoglic > 22] <- NA # Limpiando data13
+data15$hemoglic[data15$hemoglic <= 1 | data15$hemoglic > 22] <- NA # Limpiando data13
+
+## Agregar año
+data14$year <- "2014"
+data15$year <- "2015"
+
+################### Base de datos total de años 2014-2015 
+################### (excluido 2013 por estar Vigilancia en Implementacion)
+
+## Fusionando las bases de datos de los años de interes
+mydata <- rbind(data14, data15)
+
+## Creando var mal control
+table(mydata$hemoglic)
+boxplot(mydata$hemoglic)
+
+mydata$a1c.7[mydata$hemoglic<7] <- 1
+mydata$a1c.7[mydata$hemoglic>=7] <- 2
+mydata$a1c.7 <- factor(mydata$a1c.7, levels = c(1,2), 
+                       labels = c("Controlled (a1c<7)", "Uncontrolled"))
+
+
+mydata$a1c.6.5[mydata$hemoglic<6.5] <- 1
+mydata$a1c.6.5[mydata$hemoglic>=6.5] <- 2
+mydata$a1c.6.5 <- factor(mydata$a1c.6.5, levels = c(1,2), 
+                       labels = c("Controlled stringent (a1c<6.5)", "Uncontrolled"))
+
+mydata$a1c.8[mydata$hemoglic<8] <- 1
+mydata$a1c.8[mydata$hemoglic>=8] <- 2
+mydata$a1c.8 <- factor(mydata$a1c.8, levels = c(1,2), 
+                         labels = c("Controlled less stringent (a1c<8)", "Uncontrolled"))
+
+table(mydata$a1c.7, exclude = NULL) # Control status
+100*prop.table(table(mydata$a1c.7))
+
+table(mydata$a1c.6.5, exclude = NULL) # Stringent Control Status
+100*prop.table(table(mydata$a1c.6.5))
+
+table(mydata$a1c.8, exclude = NULL) # Less Stringent Control Status
+100*prop.table(table(mydata$a1c.8))
+
+## install.packages("psych")
+library(psych)
+
+describe(mydata$hemoglic)
+
+## Limpiando variable sexo
+str(mydata$sexo)
+mydata$sexo <- factor(mydata$sexo, levels = c(1,2), labels = c("Masculino", "Femenino"))
+table(mydata$sexo, exclude = NULL)
+
+## Limpiando variable instruccion
+str(mydata$instruccion)
+table(mydata$instruccion, exclude = NULL)
+mydata$instruccion <- factor(mydata$instruccion, levels = c(1:9), 
+                             labels = c("Prim incompl", "Prim compl", "Secund incompl", 
+                                        "Secund compl", "Sup no univ incompl" ,"Sup no univ compl", 
+                                        "Sup univ incompl", "Sup univ compl", "Ninguno"))
+## Nueva var instruccion
+mydata$grado.inst[mydata$instruccion=="Ninguno"] <- "Ninguno"
+mydata$grado.inst[mydata$instruccion=="Prim incompl" | mydata$instruccion=="Prim compl"] <- "Primaria"
+mydata$grado.inst[mydata$instruccion=="Secund incompl" | mydata$instruccion=="Secund compl"] <- "Secundaria"
+mydata$grado.inst[mydata$instruccion=="Sup no univ incompl" | mydata$instruccion=="Sup no univ compl"] <- "Sup no univ"
+mydata$grado.inst[mydata$instruccion=="Sup univ incompl" | mydata$instruccion=="Sup univ compl"] <- "Sup univ"
+table(mydata$grado.inst, exclude=NA)
+
+mydata$grado.inst2[mydata$instruccion=="Ninguno"] <- "Ninguno"
+mydata$grado.inst2[mydata$instruccion=="Prim incompl" | mydata$instruccion=="Prim compl"] <- "Primaria"
+mydata$grado.inst2[mydata$instruccion=="Secund incompl" | mydata$instruccion=="Secund compl"] <- "Secundaria"
+mydata$grado.inst2[mydata$instruccion=="Sup no univ incompl" | mydata$instruccion=="Sup no univ compl" | 
+                     mydata$instruccion=="Sup univ incompl" | mydata$instruccion=="Sup univ compl"] <- "Superior"
+table(mydata$grado.inst2, exclude=NA)
+
+## Limpiando variable asegurado
+str(mydata$asegurado)
+table(mydata$asegurado, exclude = NULL)
+mydata$asegurado[mydata$tseguro>=1] <- 1
+mydata$asegurado <- factor(mydata$asegurado, levels = c(1,2), labels = c("Si", "No"))
+
+## Limpiando variable tipo de seguro
+str(mydata$tseguro)
+table(mydata$tseguro, exclude = NULL)
+mydata$tseguro <- factor(mydata$tseguro, levels = c(1:10), 
+                         labels = c("SIS", "EsSalud (titular)", "EsSalud (familiar)", 
+                                    "EsSalud (facultativo)", "EsSalud (regimen especial", 
+                                    "FFAA/PNP", "Privado(prepago)", "Privado(autoseguro)", 
+                                    "Privado(seguro asistencia medica)", "Otro"))
+table(mydata$otroseguro, exclude = NULL)
+
+
+##  Limpiando tipo de caso
+str(mydata$tcaso)
+table(mydata$tcaso, exclude = NULL)
+mydata$tcaso <- factor(mydata$tcaso, levels = c(1,2), labels = c("caso nuevo (incidente)", 
+                                                                 "caso prevalente"))
+
+## Limpiando variable fecha de registro y de captacion
+mydata$fecha_reg1 <- as.Date(mydata$fecha_reg, "%Y-%m-%d")
+mydata$fecha_nac1 <- as.Date(mydata$fecha_nac, "%Y-%m-%d")
+mydata$fecha_cap1 <- as.Date(mydata$fecha_cap, "%Y-%m-%d")
+
+mydata$mes.captacion <- format(mydata$fecha_cap1, format="%m")
+str(mydata$mes.captacion)
+mydata$mes.captacion <- as.numeric(mydata$mes.captacion)
+
+## Limpiando tiempo de enfermedad
+str(mydata$tmpenf1)
+table(mydata$tmpenf1, exclude = NULL)
+
+str(mydata$tmpenf2)
+table(mydata$tmpenf2, exclude = NULL)
+mydata$tmpenf2.yr<- mydata$tmpenf2/12
+
+mydata$time.enf <- mydata$tmpenf1 + mydata$tmpenf2.yr  ## Tiempo de enfermedad en años
+table(mydata$time.enf, exclude = NULL)
+
+## Validacion cruzada Tiempo enf vs Tiempo de tratamiento
+mydata$incon.time <- mydata$time.enf - mydata$time.tto
+table(mydata$incon.time, exclude = NULL)
+
+mydata$time.enf[mydata$incon.time<0 & mydata$time.enf==0] <- NA
+
+mydata$time.enf2 <- mydata$tmpenf1*12 + mydata$tmpenf2 ## Tiempo de enfermedad en meses
+
+## Asumiendo Caso prevalente aquel que tiene un tiempo de enfermedad de 1 año a más
+mydata$tcaso.valido <- NULL
+mydata$tcaso.valido[mydata$time.enf>=1] <- "Caso>1año DM" 
+mydata$tcaso.valido[mydata$time.enf<1] <- "Caso<1año DM"
+
+table(mydata$tcaso.valido, exclude = NULL)
+
+## Asumiendo Caso prevalente aquel que tiene un tiempo de enfermedad mayor de 0
+mydata$tcaso.valido2 <- mydata$tcaso
+mydata$tcaso.valido2[mydata$time.enf > 0] <- "caso prevalente"
+mydata$tcaso.valido2[mydata$time.enf == 0] <- "caso incidente"
+
+## Asumiendo que caso incidente es que aquel que durante el año politico (2014 o 2015) tuvo el dx, vs casoç
+## prevalente en el que se asume que el dx fue hecho el año proximo. Incidencia de periodo anual...
+
+mydata$tiempodx.vig <- mydata$mes.captacion - mydata$time.enf2
+table(mydata$tiempodx.vig, exclude = NULL)
+
+mydata$tcaso.valido3[mydata$tiempodx.vig >= 0] <- "caso incidente"
+mydata$tcaso.valido3[mydata$tiempodx.vig < 0] <- "caso prevalente"
+
+table(mydata$tcaso.valido3, exclude = NULL)
+
+## Limpiando tipo de diabetes
+str(mydata$tdiabetes)
+table(mydata$tdiabetes, exclude = NULL)
+mydata$tdiabetes <- factor(mydata$tdiabetes, levels = c(1:7), 
+                           labels = c("Tipo 1", "Tipo 2", "Gestacional", "Secundaria", 
+                                      "Pre-diabetes", "No Clasificada", "Otro"))
+table(mydata$tdiabetes, mydata$tcaso.valido3)
+
+## Limpiando variable edad
+boxplot(mydata$edad)
+hist(mydata$edad)
+table(mydata$edad, exclude = NULL)
+mydata$edad[mydata$edad==0] <- NA # Se considero los valores de 0 como dato perdido
+mydata$edad[mydata$edad >120] <- NA # Se consideró no plausible valores mayores de 110 años
+
+table(mydata$edad[mydata$edad<=25], mydata$tdiabetes[mydata$edad<=25])
+
+## Limpiando variable peso
+table(mydata$peso, exclude = NULL)
+
+mydata$peso[mydata$peso==0] <- NA ## Eliminando peso no plausible
+
+hist(mydata$peso)
+boxplot(mydata$peso)
+
+mydata$edad[mydata$peso == 1.48]
+mydata$talla[mydata$peso == 1.48]
+mydata$imc[mydata$peso == 1.48]
+mydata$peso[mydata$peso==1.48] <- NA ## Eliminando peso no plausible
+
+mydata$edad[mydata$peso == 3]
+mydata$talla[mydata$peso == 3]
+mydata$imc[mydata$peso == 3]
+mydata$peso[mydata$peso==3] <- NA ## Eliminando peso no plausible
+
+mydata$edad[mydata$peso == 18]
+mydata$talla[mydata$peso == 18]
+mydata$imc[mydata$peso == 18]
+mydata$peso[mydata$peso==18] <- NA ## Eliminando peso no plausible
+
+mydata$edad[mydata$peso == 19]
+mydata$talla[mydata$peso == 19]
+mydata$imc[mydata$peso == 19] ## Valor totalmente plausible
+
+
+mydata$edad[mydata$peso == 31]
+mydata$talla[mydata$peso == 31]
+mydata$imc[mydata$peso == 31]
+mydata$tdiabetes[mydata$peso == 31]
+View(mydata[mydata$peso==31]) ## Valor totalmente plausible
+
+mydata$edad[mydata$peso == 34.5]
+mydata$talla[mydata$peso == 34.5]
+mydata$imc[mydata$peso == 34.5]
+mydata$tdiabetes[mydata$peso == 34.5] ## Valor totalmente plausible
+
+mydata$edad[mydata$peso == 35]
+mydata$talla[mydata$peso == 35]
+mydata$imc[mydata$peso == 35]
+mydata$tdiabetes[mydata$peso == 35] ## Valor totalmente plausible
+
+mydata$edad[mydata$peso == 36]
+mydata$talla[mydata$peso == 36]
+mydata$imc[mydata$peso == 36]
+mydata$tdiabetes[mydata$peso == 36] ## Valor totalmente plausible
+
+mydata$edad[mydata$peso == 150]
+mydata$talla[mydata$peso == 150]
+mydata$imc[mydata$peso == 150]
+mydata$tdiabetes[mydata$peso == 150] ## Valor totalmente plausible
+
+mydata$peso[mydata$talla == 0.57]
+mydata$edad[mydata$talla == 0.57]
+mydata$imc[mydata$talla == 0.57]
+mydata$imc2[mydata$talla == 0.57]
+mydata$talla[mydata$talla==0.57] <- NA ## Eliminado por valores no plausibles
+
+mydata$peso[mydata$talla == 1]
+mydata$edad[mydata$talla == 1]
+mydata$imc[mydata$talla == 1]
+mydata$imc2[mydata$talla == 1]
+mydata$talla[mydata$talla == 1] <- NA ## Eliminado por valores muy poco probables que sean plausibles
+
+mydata$peso[mydata$talla == 1.2]
+mydata$edad[mydata$talla == 1.2]
+mydata$imc[mydata$talla == 1.2]
+mydata$imc2[mydata$talla == 1.2] ## Valor totalmente plausible
+
+mydata$imc2 <- mydata$peso/mydata$talla**2
+table(mydata$imc2)
+
+## Limpiando variable talla
+hist(mydata$talla)
+boxplot(mydata$talla)
+table(mydata$talla, exclude = NULL)
+mydata$talla[mydata$talla>2] <- (mydata$talla[mydata$talla>2])/100
+mydata$talla[mydata$talla==0] <- NA
+
+## Limpiando variable IMC
+hist(mydata$imc2)
+boxplot(mydata$imc2)
+table(mydata$imc2, exclude = NULL)
+
+mydata$imc2 <- mydata$peso/mydata$talla**2
+hist(mydata$imc2)
+boxplot(mydata$imc2)
+table(mydata$imc2, exclude = NULL)
+
+## Limpienado variable pcint
+hist(mydata$pcint)
+boxplot(mydata$pcint)
+table(mydata$pcint, exclude = NULL)
+mydata$pcint[mydata$pcint==0] <- NA ## Valor no plausible
+mydata$pcint[mydata$pcint<=50] <- NA ## Valores no plausibles
+mydata$pcint[mydata$pcint>185] <- NA ## Valores no plausibles
+
+## Limpienado variable sistolica
+hist(mydata$sistolica)
+boxplot(mydata$sistolica)
+table(mydata$sistolica, exclude = NULL)
+mydata$sistolica[mydata$sistolica==0] <- NA ## Valores no plausibles
+mydata$sistolica[mydata$sistolica>200] <- NA ## Valores no plausibles
+mydata$sistolica[mydata$sistolica<90] <- NA ## Valores no plausibles
+
+## Limpienado variable sistolica
+hist(mydata$diastolica)
+boxplot(mydata$diastolica)
+table(mydata$diastolica, exclude = NULL)
+mydata$diastolica[mydata$diastolica==0] <- NA ## Valores no plausibles
+mydata$diastolica[mydata$diastolica>130] <- NA ## Valores no plausibles
+mydata$diastolica[mydata$diastolica<50] <- NA ## Valores no plausibles
+
+## Limpienado variable glicemia (en ayunas)
+hist(mydata$glicemia)
+boxplot(mydata$glicemia)
+table(mydata$glicemia, exclude = NULL)
+mydata$glicemia[mydata$glicemia==0] <- NA ## Valores no plausibles
+mydata$glicemia[mydata$glicemia<50] <- NA ## Valores no plausibles
+
+## Limpienado variable postpandrial (glicemia postpandrial)
+hist(mydata$postpandrial)
+boxplot(mydata$postpandrial)
+table(mydata$postpandrial, exclude = NULL)
+mydata$postpandrial[mydata$postpandrial==0] <- NA ## Valores no plausibles
+
+## Limpienado variable tolerancia (Tolerancia Oral de Glucosa)
+hist(mydata$tolerancia)
+boxplot(mydata$tolerancia)
+table(mydata$tolerancia, exclude = NULL)
+mydata$tolerancia[mydata$tolerancia==0] <- NA ## Valores no plausibles
+
+## Limpienado variable microalbu
+hist(mydata$microalbu)
+boxplot(mydata$microalbu)
+table(mydata$microalbu, exclude = NULL) ## Variable microalbum poco confiable
+
+## Limpienado variable ldl
+hist(mydata$ldl)
+boxplot(mydata$ldl)
+table(mydata$ldl, exclude = NULL) ## Variable microalbum poco confiable
+mydata$ldl[mydata$ldl==0] <- NA ## Valores no plausibles
+
+########## Hay que revisar demás variables de laboratorio 
+
+## Limpiando variable numero de status
+hist(mydata$status)
+table(mydata$status, exclude = NULL)
+mydata$status <- factor(mydata$status, levels = c(1,2,3,4), labels = c("Controlado/Estable", 
+                                                                       "Complicado", "Muerto", 
+                                                                       "Descompensado"))
+## Limpiando variable numero de consultas
+hist(mydata$consultas)
+table(mydata$consultas, exclude = NULL)
+
+## Limpiando variable evaluado (complicaciones al momento de la consulta - caso evaluado)
+hist(mydata$evaluado)
+table(mydata$evaluado, exclude = NULL) ## Variable poco confiable
+
+## Limpiando variables de comorbildiades
+## HTA
+table(mydata$hta, exclude = NULL)
+mydata$hta <- factor(mydata$hta, levels = c(0,1), labels = c("No", "Si"))
+
+## Obesidad
+table(mydata$obesidad, exclude = NULL)
+mydata$obesidad <- factor(mydata$obesidad, levels = c(0,1), labels = c("No", "Si"))
+
+## Dislipidemia
+table(mydata$displidemia, exclude = NULL)
+mydata$displidemia <- factor(mydata$displidemia, levels = c(0,1), labels = c("No", "Si"))
+
+## Anemia
+table(mydata$anemia, exclude = NULL)
+mydata$anemia <- factor(mydata$anemia, levels = c(0,1), labels = c("No", "Si"))
+
+## Higado Graso
+table(mydata$higado, exclude = NULL)
+mydata$higado <- factor(mydata$higado, levels = c(0,1), labels = c("No", "Si"))
+
+## Enfermedad tiroidea
+table(mydata$etiroidea, exclude = NULL)
+mydata$etiroidea <- factor(mydata$etiroidea, levels = c(0,1), labels = c("No", "Si"))
+
+## TBC
+table(mydata$tbc, exclude = NULL)
+mydata$tbc <- factor(mydata$tbc, levels = c(0,1), labels = c("No", "Si"))
+
+## Fuma actualmente
+table(mydata$tabaquismo, exclude = NULL)
+mydata$tabaquismo <- factor(mydata$tabaquismo, levels = c(0,1), labels = c("No", "Si"))
+
+## Cancer
+table(mydata$cancer, exclude = NULL)
+mydata$cancer <- factor(mydata$cancer, levels = c(0,1), labels = c("No", "Si"))
+
+## Otra
+table(mydata$otrocancer)
+
+## Limpiando variable tiempo de tratamiento
+hist(mydata$tiempo)
+boxplot(mydata$tiempo)
+table(mydata$tiempo, exclude = NULL)
+
+## Limpiando variable tiempo de tratamiento 2
+hist(mydata$tiempo2)
+boxplot(mydata$tiempo2)
+table(mydata$tiempo2, exclude = NULL)
+
+## Creando variable tiempo de tratamiento (time.tto)
+mydata$time.tto <- mydata$tiempo + mydata$tiempo2/12
+table(mydata$time.tto)
+mydata$time.tto[mydata$time.tto>52] <- NA
+
+## Limpiando variable cumplimiento
+table(mydata$cumplimiento, exclude = NULL)
+mydata$cumplimiento[mydata$cumplimiento==0] <- NA
+mydata$cumplimiento <- factor(mydata$cumplimiento, levels = c(1,2,3), 
+                              labels = c("Si", "No", "Iniciando tratamiento"))
+
+## Limpiando variable educacion
+table(mydata$educacion, exclude = NULL)
+mydata$educacion[mydata$educacion==0] <- NA
+mydata$educacion <- factor(mydata$educacion, levels = c(1,2), labels = c("Si", "No"))
+
+## Creando variable status para seleccion
+mydata$status2[mydata$status=="Controlado/Estable" | 
+                 mydata$status == "Complicado"] <- "Incluir"
+mydata$status2[mydata$status=="Muerto" | mydata$status == "Descompensado"] <- "No Incluir"
+
+## Limpiando variable tratamiento
+table(mydata$metformina, exclude=NULL)
+mydata$met2 <- mydata$metformina
+mydata$met2[is.na(mydata$metformina)] <- 0
+table(mydata$sulfolinurea, exclude=NULL)
+mydata$sulf2 <- mydata$sulfolinurea
+mydata$sulf2[is.na(mydata$sulfolinurea)] <- 0
+table(mydata$inhibidores, exclude=NULL)
+mydata$inh2 <- mydata$inhibidores
+mydata$inh2[is.na(mydata$inhibidores)] <- 0
+table(mydata$glitazonas, exclude=NULL)
+mydata$glit2 <- mydata$glitazonas
+mydata$glit2[is.na(mydata$glitazonas)] <- 0
+table(mydata$glifozinas, exclude=NULL)
+mydata$glif2 <- mydata$glifozinas
+mydata$glif2[is.na(mydata$glifozinas)] <- 0
+table(mydata$agonistas, exclude=NULL)
+mydata$ago2 <- mydata$agonistas
+mydata$ago2[is.na(mydata$agonistas)] <- 0
+table(mydata$insulinanph, exclude=NULL)
+mydata$nph2 <- mydata$insulinanph
+mydata$nph2[is.na(mydata$insulinanph)] <- 0
+table(mydata$insulinaa, exclude=NULL)
+mydata$insu2 <- mydata$insulinaa
+mydata$insu2[is.na(mydata$insulinaa)] <- 0
+
+
+table(mydata$met2, exclude=NULL)
+table(mydata$sulf2, exclude=NULL)
+table(mydata$inh2, exclude=NULL)
+table(mydata$glit2, exclude=NULL)
+table(mydata$glif2, exclude=NULL)
+table(mydata$ago2, exclude=NULL)
+table(mydata$nph2, exclude=NULL)
+table(mydata$insu2, exclude=NULL)
+
+## Creando variable al menos 1 AOD = aod.1
+mydata$aod.1 <- mydata$met2 + mydata$sulf2 + mydata$inh2 + mydata$glit2 + mydata$glif2
+table(mydata$aod.1, exclude=NULL)
+mydata$aod.cat[mydata$aod.1>=1] <- "Al menos 1 AOD"
+mydata$aod.cat[mydata$aod.1==0] <- "Ningun AOD"
+table(mydata$aod.cat, exclude=NULL)
+
+## Creando variable al menos 1 insulina inyectable
+mydata$inyect.insul.1 <-  mydata$nph2 + mydata$insu2 + mydata$ago2
+table(mydata$inyect.insul.1)
+mydata$inyect.cat[mydata$inyect.insul.1>=1] <- "Al menos 1 inyectable"
+mydata$inyect.cat[mydata$inyect.insul.1==0] <- "Ningun inyectable"
+table(mydata$inyect.cat, exclude = NULL)
+
+## Eliminando variables transitorias
+mydata[, c("met2", "sulf2", "inh2", "glit2", "glif2", "ago2", "nph2", "insu2")] <- list(NULL)
+
+## Creando variable esquema de  tratamiento utilizado insulina c/s AOD
+mydata$treat.esq <- NA
+mydata$treat.esq[mydata$aod.cat=="Ningun AOD" & 
+                   mydata$inyect.cat=="Ningun inyectable"] <- "No medicamentoso"
+
+mydata$treat.esq[mydata$aod.cat=="Al menos 1 AOD" & 
+                   mydata$inyect.cat=="Ningun inyectable"] <- "Solo AOD"
+
+mydata$treat.esq[mydata$inyect.cat=="Al menos 1 inyectable"] <- "Inyectable c/s AOD"
+
+table(mydata$treat.esq)
+
+## Creando variable esquema de  tratamiento utilizado insulina con y sin AOD por separado
+mydata$treat.esq2[mydata$aod.cat=="Ningun AOD" & 
+                   mydata$inyect.cat=="Ningun inyectable"] <- "No medicamentoso"
+
+mydata$treat.esq2[mydata$aod.cat=="Al menos 1 AOD" & 
+                   mydata$inyect.cat=="Ningun inyectable"] <- "Solo AOD"
+
+mydata$treat.esq2[mydata$aod.cat=="Ningun AOD" & 
+                    mydata$inyect.cat=="Al menos 1 inyectable"] <- "Inyectable s/ AOD"
+
+mydata$treat.esq2[mydata$aod.cat=="Al menos 1 AOD" & 
+                    mydata$inyect.cat=="Al menos 1 inyectable"] <- "Inyectable c/ AOD"
+
+table(mydata$treat.esq2)
+
+## Exportando a csv la data 2014-2015
+write.table(mydata, "Database Vigilancia 2014-2015", sep = ",")
+
+## Data para analizar
+mydata.prev <- mydata[which(mydata$tcaso.valido=="Caso>1año DM" & mydata$tdiabetes == "Tipo 2"
+                      & mydata$cancer=="No" & mydata$tbc=="No" & mydata$status2=="Incluir" &
+                        mydata$anemia=="No"),]
+
+mydata.prev2 <- mydata.prev[complete.cases(mydata.prev$a1c.7), ]
+
+analysis <- mydata.prev2[, c("year", "a1c.7", "treat.esq", "treat.esq2", "sexo", "edad", "grado.inst", "grado.inst2", "asegurado", 
+                             "tseguro", "time.enf", "time.tto", "tabaquismo", "hta", "obesidad", 
+                             "displidemia", "anemia", "higado", "etiroidea", 
+                             "metformina", "sulfolinurea", "inhibidores", "insulinanph", 
+                             "insulinaa", "glitazonas", "glifozinas", "agonistas", 
+                             "cumplimiento", "educacion", "peso", "talla", "imc2", "pcint", "sistolica", 
+                             "diastolica", "glicemia", "hemoglic", "status", "consultas", 
+                             "hospitalizaciones")]
+
+## Creando categoria de edad dicotomica
+analysis$edad.dicset[analysis$edad>=0 & analysis$edad < 70] <- "menor de 70"
+analysis$edad.dicset[analysis$edad>=70] <- "mas o igual 70"
+table(analysis$edad.dicset)
+
+## install.packages("psych")
+library(psych)
+
+## Creando variable tratamiento
+table(analysis$metformina, exclude=NULL)
+table(analysis$sulfolinurea, exclude=NULL)
+table(analysis$inhibidores, exclude=NULL)
+table(analysis$glitazonas, exclude=NULL)
+table(analysis$glifozinas, exclude=NULL)
+table(analysis$agonistas, exclude=NULL)
+analysis$agon2 <- analysis$agonistas
+analysis$agon2[is.na(analysis$agonistas)] <- 0
+table(analysis$agon2)
+table(analysis$insulinanph, exclude=NULL)
+table(analysis$insulinaa, exclude=NULL)
+
+analysis$aod <- analysis$metformina + analysis$sulfolinurea + analysis$inhibidores + analysis$agon2
+analysis$inyect.insul <- analysis$insulinanph + analysis$insulinaa
+
+table(analysis$aod, exclude=NULL)
+table(analysis$inyect.insul, exclude=NULL)
+
+analysis$treat <- analysis$aod + analysis$inyect.insul
+table(analysis$treat)
+  
+analysis$treat2[analysis$treat==0] <- 0
+analysis$treat2[analysis$aod==1 & analysis$inyect.insul==0] <- 1
+analysis$treat2[analysis$aod>=2 & analysis$inyect.insul==0] <- 2
+analysis$treat2[analysis$inyect.insul>0] <- 3
+analysis$treat2 <- factor(analysis$treat2, levels = c(0,1,2,3), 
+                          labels = c("No medicamentoso/Dieta?", "1 solo AOD", "2+ AOD", "Insulina c/s AOD"))
+table(analysis$treat2)
+
+analysis$treat3[analysis$treat==0] <- 0
+analysis$treat3[analysis$aod==1 & analysis$inyect.insul==0] <- 1
+analysis$treat3[analysis$aod>=2 & analysis$inyect.insul==0] <- 2
+analysis$treat3[analysis$aod==0 & analysis$inyect.insul>0] <- 3
+analysis$treat3[analysis$aod>=1 & analysis$inyect.insul>0] <- 4
+analysis$treat3 <- factor(analysis$treat3, levels = c(0,1,2,3,4), 
+                          labels = c("No medicamentoso/Dieta?", "1 solo AOD", "2+ AOD", "Insulina s/ AOD", 
+                                     "Insulina c/ AOD"))
+table(analysis$treat3)
+
+analysis$treat4[analysis$treat==0] <- 0
+analysis$treat4[analysis$aod==1 & analysis$inyect.insul==0] <- 1
+analysis$treat4[analysis$aod>=2 & analysis$inyect.insul==0] <- 2
+analysis$treat4[analysis$aod==0 & analysis$inyect.insul>0] <- 3
+analysis$treat4[analysis$aod==1 & analysis$inyect.insul>0] <- 4
+analysis$treat4[analysis$aod>=2 & analysis$inyect.insul>0] <- 5
+analysis$treat4 <- factor(analysis$treat4, levels = c(0,1,2,3,4,5), 
+                          labels = c("No medicamentoso/Dieta?", "1 solo AOD", "2+ AOD", "Insulina s/ AOD", 
+                                     "Insulina c/ 1 AOD", "Insulina c/ 2+ AOD"))
+table(analysis$treat4)
+
+## Categorizando tiempo de enfermedad
+analysis$time.enf.cat[analysis$time.enf>=1 & analysis$time.enf < 5] <- "0-5"
+analysis$time.enf.cat[analysis$time.enf>=5 & analysis$time.enf < 10] <- "6-10"
+analysis$time.enf.cat[analysis$time.enf>=10 & analysis$time.enf < 15] <- "11-15"
+analysis$time.enf.cat[analysis$time.enf>=15 & analysis$time.enf < 20] <- "16-20"
+analysis$time.enf.cat[analysis$time.enf>=20] <- "20+"
+
+# Categorizando tiempo de tratamiento
+analysis$time.tto.cat[analysis$time.tto>=0 & analysis$time.tto < 5] <- "0-5"
+analysis$time.tto.cat[analysis$time.tto>=5 & analysis$time.tto < 10] <- "6-10"
+analysis$time.tto.cat[analysis$time.tto>=10 & analysis$time.tto < 15] <- "11-15"
+analysis$time.tto.cat[analysis$time.tto>=15 & analysis$time.tto < 20] <- "16-20"
+analysis$time.tto.cat[analysis$time.tto>=20] <- "20+"
+
+# Recategorizando cumplimiento en cumplimiento 2
+analysis$cumplim2 <- analysis$cumplimiento
+analysis$cumplim2[analysis$cumplimiento == "Iniciando tratamiento"] <- "Si"
+analysis$cumplim2 <- factor(analysis$cumplim2, labels = c("Si", "No"))
+
+# Categorizando numero de consultas
+analysis$consultas.cat[analysis$consultas>=4] <- "4 o mas"
+analysis$consultas.cat[analysis$consultas< 4] <- "menos de 4"
+
+# Creando categorias de IMC
+analysis$imc.cat[analysis$imc2>=0 & analysis$imc2 < 25] <- "menos de 25"
+analysis$imc.cat[analysis$imc2>=25 & analysis$imc2 < 30] <- "Sobrepeso"
+analysis$imc.cat[analysis$imc2>=30] <- "Obesidad"
+analysis$imc.cat <- factor(analysis$imc.cat, 
+                           levels = c("menos de 25", "Sobrepeso", "Obesidad"), ordered = FALSE)
+
+# Categorizando edad (version larga)
+analysis$edad.cat[analysis$edad>=0 & analysis$edad < 50] <- "menor de 50"
+analysis$edad.cat[analysis$edad>=50 & analysis$edad < 60] <- "mas o = de 50"
+analysis$edad.cat[analysis$edad>=60 & analysis$edad < 70] <- "mas o = 60"
+analysis$edad.cat[analysis$edad>=70 & analysis$edad < 80] <- "mas 0 = 70"
+analysis$edad.cat[analysis$edad>=80] <- "mayor o = 80"
+analysis$edad.cat <- factor(analysis$edad.cat, 
+                            levels = c("menor de 50", "mas o = de 50",
+                                       "mas o = 60", "mas 0 = 70", "mayor o = 80"), ordered = FALSE)
+
+# Recategorizando Tipo de Seguro
+analysis$tipo.seg[analysis$tseguro=="SIS"] <- "SIS"
+analysis$tipo.seg[analysis$tseguro=="EsSalud (titular)"] <- "E"
+analysis$tipo.seg[analysis$tseguro=="EsSalud (familiar)"] <- "E"
+analysis$tipo.seg[analysis$tseguro=="EsSalud (facultativo)"] <- "E"
+analysis$tipo.seg[analysis$tseguro=="EsSalud (regimen especial"] <- "E"
+analysis$tipo.seg[analysis$tseguro=="FFAA/PNP"] <- "E"
+analysis$tipo.seg[analysis$tseguro=="Privado(prepago)"] <- "E"
+
+
+
+##creando goal de presiones
+analysis$goal.sist[analysis$sistolica<140 & analysis$diastolica<90] <- "ok"
+analysis$goal.sist[analysis$sistolica>=140 | analysis$diastolica>=90] <- "bad"
+
+##creando goal presion + imc
+analysis$goal.pa.hba[analysis$goal.sist== "ok" & analysis$a1c.7== "Controlled (a1c<7)"] <- "1"
+analysis$goal.pa.hba[analysis$goal.sist=="bad" | analysis$a1c.7== "Uncontrolled"] <- "0"
+
+##Creando goal presion + imc + hemoglic
+analysis$goal.pa.hba.imc[analysis$goal.pa.hba== "1" & analysis$imc2 < 25 ] <- "1"
+analysis$goal.pa.hba.imc[analysis$goal.pa.hba=="0" | analysis$imc2>= 25] <- "0"
+
+##creando categorias de edad
+analysis$edad.dicset[analysis$edad>=0 & analysis$edad < 75] <- "menor de 75"
+analysis$edad.dicset[analysis$edad>=75] <- "mas o igual 75"
+
+##Creando variable edad de diagnostico
+analysis$edad.diag <- analysis$edad-analysis$time.enf
+
+## Creando variable tiempo de enfermedad para modelo multivariado
+analysis$time.enf.cat.model[analysis$time.enf.cat=="0-5"] <- 1
+analysis$time.enf.cat.model[analysis$time.enf.cat=="6-10"] <- 2
+analysis$time.enf.cat.model[analysis$time.enf.cat=="11-15" | 
+                              analysis$time.enf.cat=="16-20" | 
+                              analysis$time.enf.cat=="20+"] <- 3
+analysis$time.enf.cat.model <- factor(analysis$time.enf.cat.model, levels = c(1,2,3), 
+                                labels = c("0-5", "6-10", "11+"))
+table(analysis$time.enf.cat.model)
+
+## Creando variable tiempo de tratamiento para modelo multivariado
+analysis$time.tto.cat.model <- NULL
+analysis$time.tto.cat.model[analysis$time.tto.cat=="0-5"] <- 1
+analysis$time.tto.cat.model[analysis$time.tto.cat=="6-10"] <- 2
+analysis$time.tto.cat.model[analysis$time.tto.cat=="11-15" | 
+                              analysis$time.tto.cat=="16-20" | 
+                              analysis$time.tto.cat=="20+"] <- 3
+analysis$time.tto.cat.model <- factor(analysis$time.tto.cat.model, levels = c(1,2,3),
+                                labels = c("0-5", "6-10", "11+"))
+table(analysis$time.tto.cat.model)
+
+## Categorizando variable edad 65
+analysis$edad.65[analysis$edad <65] <- 1
+analysis$edad.65[analysis$edad>=65] <- 2
+analysis$edad.65 <- factor(analysis$edad.65, levels = c(1,2), labels = c("Menor de 65", "Mayor igual 65"))
+table(analysis$edad.65)
+
+## Categorizando variable edad 75
+analysis$edad.75[analysis$edad <75] <- 1
+analysis$edad.75[analysis$edad>=75] <- 2
+analysis$edad.75 <- factor(analysis$edad.75, levels = c(1,2), labels = c("Menor de 75", "Mayor igual 75"))
+table(analysis$edad.75)
